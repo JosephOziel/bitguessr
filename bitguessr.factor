@@ -1,4 +1,4 @@
-USING: accessors classes.struct formatting kernel math namespaces raylib ;
+USING: accessors classes.struct formatting kernel math namespaces random raylib sequences ;
 IN: bitguessr
 
 CONSTANT: screen-width 800
@@ -98,18 +98,17 @@ MEMO: music ( -- music )
         lives get 1 + lives set
     ] when
 
-    mouse button-0 button-bounds dup x>> 175 - >>x check-collision-point-rec 
-    [ MOUSE_BUTTON_LEFT is-mouse-button-pressed [ 
-        button-0-do
-    ] [ 1 btn0-state set ] if ] [ 0 btn0-state set ] if
-    mouse button-1 button-bounds dup x>> 175 + >>x check-collision-point-rec 
-    [ MOUSE_BUTTON_LEFT is-mouse-button-pressed [ 
-        button-1-do
-    ] [ 1 btn1-state set ] if ] [ 0 btn1-state set ] if
-    KEY_A is-key-pressed [ button-0-do ] when
-    KEY_D is-key-pressed [ button-1-do ] when
-
     game-screen get zero? [
+        mouse button-0 button-bounds dup x>> 175 - >>x check-collision-point-rec 
+        [ MOUSE_BUTTON_LEFT is-mouse-button-pressed [ 
+            button-0-do
+        ] [ 1 btn0-state set ] if ] [ 0 btn0-state set ] if
+        mouse button-1 button-bounds dup x>> 175 + >>x check-collision-point-rec 
+        [ MOUSE_BUTTON_LEFT is-mouse-button-pressed [ 
+            button-1-do
+        ] [ 1 btn1-state set ] if ] [ 0 btn1-state set ] if
+        KEY_A is-key-pressed [ button-0-do ] when
+        KEY_D is-key-pressed [ button-1-do ] when
         button-0-draw
         button-1-draw
         mid-text get dup screen-width 2/ swap length 5 * - screen-height 2/ 20 BLACK draw-text
