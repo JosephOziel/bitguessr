@@ -124,7 +124,7 @@ MEMO: music ( -- music )
     make-window
     init-audio-device
     music play-music-stream
-    ! "bitguessr_icon.png" load-image PIXELFORMAT_UNCOMPRESSED_R8G8B8A8 image-format set-window-icon
+    "bitguessr_icon.png" raylib:load-image [ 7 raylib:image-format ] [ set-window-icon ] bi
     0 btn1-state set
     0 btn0-state set
     0 score set
