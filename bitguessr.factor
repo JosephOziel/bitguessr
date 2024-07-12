@@ -76,6 +76,7 @@ MEMO: music ( -- music )
             0 score set
             "" acc set
             { 0 1 1 0 0 1 0 1 0 1 0 0 1 0 1 } random rand-bit set
+            "Choose a button" mid-text set
             0 game-screen set 
         ] when
     ] when
@@ -91,6 +92,10 @@ MEMO: music ( -- music )
     KEY_Q is-key-pressed [
         0 score set
         3 lives set
+    ] when
+
+    KEY_L is-key-pressed [
+        lives get 1 + lives set
     ] when
 
     mouse button-0 button-bounds dup x>> 175 - >>x check-collision-point-rec 
@@ -111,7 +116,7 @@ MEMO: music ( -- music )
         "BitGuessr" screen-width 2/ 110 - 30 50 BLACK draw-text
         score get "Score: %s" sprintf screen-width 150 - 20 25 BLACK draw-text
         lives get "Lives: %s" sprintf 30 20 25 BLACK draw-text
-        "Press E to pause music; Press Q to reset score\n\nPress A for 0; Press D for 1" screen-width 2/ 250 - screen-height 80 - 16 BLACK draw-text
+        "Press E to pause music; Press Q to reset\n\nPress A for 0; Press D for 1" screen-width 2/ 250 - screen-height 80 - 16 BLACK draw-text
     ] [
         "You lost" screen-width 2/ 80 - 30 45 BLACK draw-text
         score get acc get "Stats:\n\n\t\t- Score: %s\n\n\t\t- Accumulated Number: %s" sprintf screen-width 2/ 200 - screen-height 2/ 60 - 30 BLACK draw-text
