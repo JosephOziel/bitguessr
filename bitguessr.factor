@@ -1,4 +1,4 @@
-USING: accessors classes.struct formatting kernel math namespaces random raylib sequences ;
+USING: accessors classes.struct formatting kernel io.pathnames math namespaces random raylib sequences ;
 IN: bitguessr
 
 CONSTANT: screen-width 800
@@ -24,23 +24,23 @@ SYMBOL: game-screen ! 0 for the main screen and 1 for the lose screen
     RAYWHITE clear-background ;
 
 MEMO: button-0 ( -- texture ) 
-    "button-0.png" load-texture ;
+    "vocab:bitguessr/_resources/button-0.png" absolute-path load-texture ;
 
 MEMO: button-1 ( -- texture ) 
-    "button-1.png" load-texture ;
+    "vocab:bitguessr/_resources/button-1.png" absolute-path load-texture ;
 
 MEMO: correct-fx ( -- sound ) 
-    "correct.wav" load-sound ;
+    "vocab:bitguessr/_resources/correct.wav" absolute-path load-sound ;
 
 MEMO: wrong-fx ( -- sound ) 
-    "wrong.wav" load-sound ;
+    "vocab:bitguessr/_resources/wrong.wav" absolute-path load-sound ;
 
 MEMO: music ( -- music )
-    "bitguessr_soundtrack.wav" load-music-stream t >>looping ;
+    "vocab:bitguessr/_resources/bitguessr_soundtrack.wav" absolute-path load-music-stream t >>looping ;
 
 :: button-rec ( button n -- rectangle )
     0 button height>> frames / n zero? [ btn0-state get * ] [ btn1-state get * ] if
-    button [ width>> ] [ height>> frames / ] bi Rectangle <struct-boa> ;
+    button [ width>> ] [ height>> frames / ] bi Rectangle boa ;
 
 : mouse ( -- vector2 )
     get-mouse-position ;
@@ -48,22 +48,22 @@ MEMO: music ( -- music )
 :: button-bounds ( button -- rectangle )
     screen-width 2/ button width>> 2/ -
     screen-height 2/ button height>> frames / 2/ -
-    button width>> button height>> frames / Rectangle <struct-boa> ;
+    button width>> button height>> frames / Rectangle boa ;
 
 : button-0-draw ( -- )
-    button-0 dup 0 button-rec button-0 button-bounds [ x>> 175 - ] [ y>> ] bi Vector2 <struct-boa> WHITE draw-texture-rec ;
+    button-0 dup 0 button-rec button-0 button-bounds [ x>> 175 - ] [ y>> ] bi Vector2 boa WHITE draw-texture-rec ;
 
 : button-1-draw ( -- )
-    button-1 dup 1 button-rec button-1 button-bounds [ x>> 175 + ] [ y>> ] bi Vector2 <struct-boa> WHITE draw-texture-rec ;
+    button-1 dup 1 button-rec button-1 button-bounds [ x>> 175 + ] [ y>> ] bi Vector2 boa WHITE draw-texture-rec ;
 
 : button-0-do ( -- ) 
     2 btn0-state set 
     rand-bit get zero? [ "Correct! Go on" score get 1 + score set correct-fx play-sound acc get "0" append acc set ] [ "Wrong!" wrong-fx play-sound lives get 1 - lives set ] if mid-text set
-    { 0 1 1 0 0 1 0 1 0 1 0 0 1 0 1 } random rand-bit set ;
+    { 0 1 } random rand-bit set ;
 
 : button-1-do ( -- )
     2 btn1-state set rand-bit get 1 = [ "Correct! Go on" score get 1 + score set correct-fx play-sound acc get "1" append acc set ] [ "Wrong!" wrong-fx play-sound lives get 1 - lives set ] if mid-text set
-    { 0 1 1 0 0 1 0 1 0 1 0 0 1 0 1 } random rand-bit set ;
+    { 0 1 } random rand-bit set ;
 
 : render-loop ( -- )
     begin-drawing
@@ -75,7 +75,7 @@ MEMO: music ( -- music )
             3 lives set
             0 score set
             "" acc set
-            { 0 1 1 0 0 1 0 1 0 1 0 0 1 0 1 } random rand-bit set
+            { 0 1 } random rand-bit set
             "Choose a button" mid-text set
             0 game-screen set 
         ] when
@@ -128,7 +128,7 @@ MEMO: music ( -- music )
     make-window
     init-audio-device
     music play-music-stream
-    "bitguessr_icon.png" raylib:load-image [ 7 raylib:image-format ] [ set-window-icon ] bi
+    "vocab:bitguessr/_resources/bitguessr_icon.png" absolute-path raylib:load-image [ 7 raylib:image-format ] [ set-window-icon ] bi
     0 btn1-state set
     0 btn0-state set
     0 score set
@@ -136,7 +136,7 @@ MEMO: music ( -- music )
     3 lives set
     f pause set
     0 game-screen set
-    { 0 1 1 0 0 1 0 1 0 1 0 0 1 0 1 } random rand-bit set
+    { 0 1 } random rand-bit set
     "Choose a button" mid-text set
     [ render-loop window-should-close not ] loop
     close-window ;
